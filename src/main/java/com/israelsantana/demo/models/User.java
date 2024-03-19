@@ -1,8 +1,10 @@
 package com.israelsantana.demo.models;
 
 import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+// import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+// import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -54,12 +57,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Task> tasks = new ArrayList<Task>();
+    private List<Portfolio> portfolios = new ArrayList<Portfolio>();
 
     @Column(name = "profile", nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Integer> profiles = new HashSet<>();
 
     public Set<ProfileEnum> getProfiles() {

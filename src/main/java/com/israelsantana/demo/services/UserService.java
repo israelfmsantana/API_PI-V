@@ -1,5 +1,6 @@
 package com.israelsantana.demo.services;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,10 +33,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // Authentication required
     public User findById(Long id) {
-        UserSpringSecurity userSpringSecurity = authenticated();
-        if (!Objects.nonNull(userSpringSecurity)
-                || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !id.equals(userSpringSecurity.getId()))
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Access denied!");
 
         Optional<User> user = this.userRepository.findById(id);
@@ -43,6 +44,37 @@ public class UserService {
                 "User not found! Id: " + id + ", Type: " + User.class.getName()));
     }
 
+    // Authentication required
+    public User findByUser_login() {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
+        User user = this.userRepository.findByUsername(userSpringSecurity.getUsername());
+        return user;
+    }
+
+    // Authentication required
+    public List<User> findAllByIds(List<Long> ids) {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
+        List<User> users = this.userRepository.findAllById(ids);
+        return users;
+    }
+
+    // Authentication required
+    public List<User> findAll() {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
+        List<User> users = this.userRepository.findAll();
+        return users;
+    }
+
+   // No need to authentication
     @Transactional
     public User create(User obj) {
         obj.setId(null);
@@ -52,15 +84,25 @@ public class UserService {
         return obj;
     }
 
+    // Authentication required
     @Transactional
     public User update(User obj) {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+
         User newObj = findById(obj.getId());
         newObj.setPassword(obj.getPassword());
         newObj.setPassword(this.bCryptPasswordEncoder.encode(obj.getPassword()));
         return this.userRepository.save(newObj);
     }
 
+    // Authentication required
     public void delete(Long id) {
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if (Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Access denied!");
+            
         findById(id);
         try {
             this.userRepository.deleteById(id);
