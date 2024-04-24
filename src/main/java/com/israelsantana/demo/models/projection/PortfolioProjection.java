@@ -10,4 +10,6 @@ public interface PortfolioProjection {
     public User getUser();
 
     public Action getAction();
+
+    public String getSymbolAction();
 }

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,5 +35,9 @@ public class Portfolio {
     @ManyToOne
     @JoinColumn(name = "action_id", nullable = false, updatable = false)
     private Action action;
+
+    @Column(name = "symbol", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String symbolAction;
     
 }

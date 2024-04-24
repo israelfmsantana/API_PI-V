@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,45 +33,91 @@ public class Action {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 100, nullable = false)
+    @Column(name = "currency", length = 100, nullable = true, unique = false)
     @Size(min = 2, max = 100)
-    @NotBlank
-    private String name;
+    private String currency;
 
-    @Column(name = "date", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String date;
+    @Column(name = "twoHundredDayAverage", nullable = true, unique = false)
+    private Double twoHundredDayAverage;
 
-    @Column(name = "open", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String open;
+    @Column(name = "twoHundredDayAverageChange", nullable = true, unique = false)
+    private Double twoHundredDayAverageChange;
 
-    @Column(name = "high", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String high;
+    @Column(name = "twoHundredDayAverageChangePercent", nullable = true, unique = false)
+    private Double twoHundredDayAverageChangePercent;
 
-    @Column(name = "low", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String low;
+    @Column(name = "marketCap", nullable = true, unique = false)
+    private Long marketCap;
 
-    @Column(name = "close", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String close;
+    @Column(name = "shortName", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String shortName;
 
-    @Column(name = "adjClose", length = 100)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String adjClose;
+    @Column(name = "longName", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String longName;
 
-    @Column(name = "volume", length = 50)
-    @Size(min = 0, max = 100)
-    @NotBlank
-    private String volume;
+    @Column(name = "regularMarketChange", nullable = true, unique = false)
+    private Double regularMarketChange;
+
+    @Column(name = "regularMarketChangePercent", nullable = true, unique = false)
+    private Double regularMarketChangePercent;
+
+    @Column(name = "regularMarketTime", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String regularMarketTime;
+
+    @Column(name = "regularMarketPrice", nullable = true, unique = false)
+    private Double regularMarketPrice;
+
+    @Column(name = "regularMarketDayHigh", nullable = true, unique = false)
+    private Double regularMarketDayHigh;
+
+    @Column(name = "regularMarketDayRange", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String regularMarketDayRange;
+
+    @Column(name = "regularMarketDayLow", nullable = true, unique = false)
+    private Double regularMarketDayLow;
+
+    @Column(name = "regularMarketVolume", nullable = true, unique = false)
+    private Double regularMarketVolume;
+
+    @Column(name = "regularMarketPreviousClose", nullable = true, unique = false)
+    private Double regularMarketPreviousClose;
+
+    @Column(name = "regularMarketOpen", nullable = true, unique = false)
+    private Double regularMarketOpen;
+
+    @Column(name = "averageDailyVolume3Month", nullable = true, unique = false)
+    private Double averageDailyVolume3Month;
+
+    @Column(name = "averageDailyVolume10Day", nullable = true, unique = false)
+    private Double averageDailyVolume10Day;
+
+    @Column(name = "fiftyTwoWeekLowChange", nullable = true, unique = false)
+    private Double fiftyTwoWeekLowChange;
+
+    @Column(name = "fiftyTwoWeekRange", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String fiftyTwoWeekRange;
+
+    @Column(name = "fiftyTwoWeekHighChange", nullable = true, unique = false)
+    private Double fiftyTwoWeekHighChange;
+
+    @Column(name = "fiftyTwoWeekHighChangePercent", nullable = true, unique = false)
+    private Double fiftyTwoWeekHighChangePercent;
+
+    @Column(name = "fiftyTwoWeekLow", nullable = true, unique = false)
+    private Double fiftyTwoWeekLow;
+
+    @Column(name = "fiftyTwoWeekHigh", nullable = true, unique = false)
+    private Double fiftyTwoWeekHigh;
+
+    @Column(name = "symbol", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String symbol;
+    
 
 
     @OneToMany(mappedBy = "action")
@@ -80,17 +125,38 @@ public class Action {
     private List<Portfolio> portfolios = new ArrayList<Portfolio>();
 
 
-    @Override
-    public String toString() {
-        return "StockData{" +
-                "name='" + name + '\'' +
-                ", date='" + date + '\'' +
-                ", open='" + open + '\'' +
-                ", high='" + high + '\'' +
-                ", low='" + low + '\'' +
-                ", close='" + close + '\'' +
-                ", adjClose='" + adjClose + '\'' +
-                ", volume='" + volume + '\'' +
-                '}';
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class BarpiData {
+        private List<Action> results;
+
+        public List<Action> getResults() {
+            return results;
+        }
+
+        public void setResults(List<Action> results) {
+            this.results = results;
+        }
+    }
+
+
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class SymbolValuePair {
+        public String symbol;
+        public Double value;
+    }
+
+
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class SymbolValueReturn {
+        public String symbol;
+        public Double value;
     }
 }

@@ -94,7 +94,7 @@ public class PortfolioService {
         if (Objects.isNull(userSpringSecurity) || !userSpringSecurity.hasRole(ProfileEnum.ADMIN))
             throw new AuthorizationException("Access denied!");
 
-        Portfolio portfolio = new Portfolio(null,obj.getUser(),obj.getAction());
+        Portfolio portfolio = new Portfolio(null,obj.getUser(),obj.getAction(),obj.getSymbolAction());
         portfolio = this.portfolioRepository.save(portfolio);
 
         return portfolio;

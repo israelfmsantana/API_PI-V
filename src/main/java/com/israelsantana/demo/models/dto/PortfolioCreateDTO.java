@@ -16,4 +16,7 @@ public class PortfolioCreateDTO {
 
     @NotNull
     private long actionId;
+
+    @NotNull
+    private String symbolAction;
 }
