@@ -32,24 +32,20 @@ public class PortfolioService {
     @Autowired
     private ActionService actionService;
 
-    // Authentication required
     public Portfolio findById(Long id) {
         Portfolio portfolio = this.portfolioRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
                 "Portfolio not found! Id: " + id + ", Type: " + Portfolio.class.getName()));
 
-        UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if (Objects.isNull(userSpringSecurity)
-                || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !userHasAction(userSpringSecurity, portfolio))
-            throw new AuthorizationException("Access denied!");
+    
 
         return portfolio;
     }
 
     // Authentication required
     public List<Portfolio> findAll() {
-        UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if (Objects.isNull(userSpringSecurity))
-            throw new AuthorizationException("Access denied!");
+        // UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        // if (Objects.isNull(userSpringSecurity))
+        //     throw new AuthorizationException("Access denied!");
             
         List<Portfolio> portfolios = this.portfolioRepository.findAll();
         return portfolios;
@@ -87,29 +83,27 @@ public class PortfolioService {
         return portfolios;
     }
 
-    // Authentication required ADMIN
     @Transactional
     public Portfolio create( Portfolio obj) {
-        UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if (Objects.isNull(userSpringSecurity) || !userSpringSecurity.hasRole(ProfileEnum.ADMIN))
-            throw new AuthorizationException("Access denied!");
 
-        Portfolio portfolio = new Portfolio(null,obj.getUser(),obj.getAction(),obj.getSymbolAction());
+        Portfolio portfolio = new Portfolio(null,obj.getUser(),obj.getAction(),obj.getSymbolAction(), obj.getValueStock(), obj.getValuePurchased(), obj.getNumberStockPurchased(), obj.getUpdateLastStock());
         portfolio = this.portfolioRepository.save(portfolio);
 
         return portfolio;
     }
 
-    // Authentication required ADMIN
+
     @Transactional
     public Portfolio update(Portfolio obj) {
-        UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if (Objects.isNull(userSpringSecurity) || !userSpringSecurity.hasRole(ProfileEnum.ADMIN))
-            throw new AuthorizationException("Access denied!");
 
         Portfolio newObj = findById(obj.getId());
         newObj.setAction(obj.getAction());
         newObj.setUser(obj.getUser());
+        newObj.setNumberStockPurchased(obj.getNumberStockPurchased());
+        newObj.setSymbolAction(obj.getSymbolAction());
+        newObj.setUpdateLastStock(obj.getUpdateLastStock());
+        newObj.setValueStock(obj.getValueStock());
+        newObj.setValuePurchased(obj.getValuePurchased());
 
         return this.portfolioRepository.save(newObj);
     }
@@ -137,6 +131,11 @@ public class PortfolioService {
         Portfolio portfolio = new Portfolio();
         portfolio.setUser(this.userService.findById(obj.getUserId()));
         portfolio.setAction(this.actionService.findById(obj.getActionId()));
+        portfolio.setSymbolAction(obj.getSymbolAction());
+        portfolio.setNumberStockPurchased(obj.getNumberStockPurchased());
+        portfolio.setUpdateLastStock(obj.getUpdateLastStock());
+        portfolio.setValueStock(obj.getValueStock());
+        portfolio.setValuePurchased(obj.getValuePurchased());
         return portfolio;
     }
 
@@ -145,6 +144,11 @@ public class PortfolioService {
         portfolio.setId(obj.getId());
         portfolio.setUser(this.userService.findById(obj.getUserId()));
         portfolio.setAction(this.actionService.findById(obj.getActionId()));
+        portfolio.setSymbolAction(obj.getSymbolAction());
+        portfolio.setNumberStockPurchased(obj.getNumberStockPurchased());
+        portfolio.setUpdateLastStock(obj.getUpdateLastStock());
+        portfolio.setValueStock(obj.getValueStock());
+        portfolio.setValuePurchased(obj.getValuePurchased());
         return portfolio;
     }
 }

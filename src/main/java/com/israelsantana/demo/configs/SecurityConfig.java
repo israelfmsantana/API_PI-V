@@ -45,12 +45,13 @@ public class SecurityConfig {
 
         private static final String[] PUBLIC_MATCHERS_POST = {
                         "/user",
-                        "/login"
+                        "/login",
         };
 
         private static final String[] PUBLIC_MATCHERS_GET = {
                 "/actions","/actions/**",
-                "/analyzes","/analyzes/**"
+                "/portfolio","/portfolio/**",
+                "/historicoPortfolio","/historicoPortfolio/**",
 
         };
 

@@ -12,11 +12,23 @@ import lombok.NoArgsConstructor;
 public class PortfolioCreateDTO {
     
     @NotNull
-    private long userId;
+    private Long userId;
 
     @NotNull
-    private long actionId;
+    private Long actionId;
 
     @NotNull
     private String symbolAction;
+
+    @NotNull
+    private Double numberStockPurchased;
+
+    @NotNull
+    private Double valuePurchased;
+
+    @NotNull
+    private Double valueStock;
+
+    @NotNull
+    private String updateLastStock;
 }

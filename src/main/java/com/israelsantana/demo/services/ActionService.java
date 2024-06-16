@@ -9,15 +9,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.israelsantana.demo.models.Action;
 import com.israelsantana.demo.models.Action.BarpiData;
+import com.israelsantana.demo.models.Action.SymbolValueReturn;
+import com.israelsantana.demo.models.projection.PortfolioProjection;
 import com.israelsantana.demo.repositories.ActionRepository;
+import com.israelsantana.demo.security.UserSpringSecurity;
+import com.israelsantana.demo.services.exceptions.AuthorizationException;
 import com.israelsantana.demo.services.exceptions.ObjectNotFoundException;
 
 import lombok.ToString;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -32,6 +39,8 @@ public class ActionService {
         List<Action> actions = this.actionRepository.findAll();
         return actions;
     }
+
+    
 
 
 
@@ -65,6 +74,65 @@ public class ActionService {
         return action.orElseThrow(() -> new ObjectNotFoundException(
                 "Action not found! Id: " + id + ", Type: " + Action.class.getName()));
     }
+
+
+    // public Action findBySymbol(String symbol) {
+    //     List<Action> actions = this.actionRepository.findBySymbol(symbol);
+    //     if(Objects.isNull(actions))
+    //         throw new AuthorizationException("Action not found! Symbol: " + symbol + ", Type: " + Action.class.getName());
+
+    //     LocalDate currentDate = LocalDate.now();
+    //     Action maisRecente = null;
+
+    //     for (Action action : actions) {
+    //         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    //         LocalDate date = LocalDate.parse(action.getRegularMarketTime(), formatter);
+    //         if ((maisRecente == null || date.isAfter(LocalDate.parse(maisRecente.getRegularMarketTime(), formatter))) && !date.isAfter(currentDate)) {
+    //             maisRecente = action;
+    //         }
+    //     }
+    //     return maisRecente;
+    // }
+    public Action findBySymbolStock(String symbol) {
+        List<Action> actions = this.actionRepository.findBySymbol(symbol);
+        if(Objects.isNull(actions))
+            throw new AuthorizationException("Action not found! Symbol: " + symbol + ", Type: " + Action.class.getName());
+    
+        LocalDate currentDate = LocalDate.now();
+        Action maisRecente = null;
+    
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    
+        for (Action action : actions) {
+            if (action.getRegularMarketPreviousClose() != null) {
+                LocalDate date = LocalDate.parse(action.getRegularMarketTime(), formatter);
+                if ((maisRecente == null || date.isAfter(LocalDate.parse(maisRecente.getRegularMarketTime(), formatter))) && !date.isAfter(currentDate)) {
+                    maisRecente = action;
+                }
+            }
+        }
+        return maisRecente;
+    }
+    public Action findBySymbolHistorical(String symbol) {
+        List<Action> actions = this.actionRepository.findBySymbol(symbol);
+        if(Objects.isNull(actions))
+            throw new AuthorizationException("Action not found! Symbol: " + symbol + ", Type: " + Action.class.getName());
+    
+        LocalDate currentDate = LocalDate.now();
+        Action maisRecente = null;
+    
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
+        for (Action action : actions) {
+            LocalDate date = LocalDate.parse(action.getRegularMarketTime(), formatter);
+            if ((maisRecente == null || date.isAfter(LocalDate.parse(maisRecente.getRegularMarketTime(), formatter))) && !date.isAfter(currentDate)) {
+                maisRecente = action;
+            }
+        }
+        return maisRecente;
+    }
+    
+    
 
 
 
@@ -139,29 +207,44 @@ public class ActionService {
         action.setTwoHundredDayAverageChange(null);
         action.setTwoHundredDayAverageChangePercent(null);
         action.setMarketCap(null);
-        action.setShortName(historicalDataList.get(8));
-        action.setLongName(historicalDataList.get(9));
+        action.setShortName(historicalDataList.get(8) != "0.0" ? historicalDataList.get(8) : null);
+        // action.setShortName(historicalDataList.get(8));
+        action.setLongName(historicalDataList.get(9) != "0.0" ? historicalDataList.get(9) : null);
+        // action.setLongName(historicalDataList.get(9));
         action.setRegularMarketChange(null);
         action.setRegularMarketChangePercent(null);
 
-        long segundos = Long.parseLong(historicalDataList.get(2));
-        Date data = new Date(segundos * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        action.setRegularMarketTime(sdf.format(data));
-        // action.setRegularMarketTime(historicalDataList.get(2));
 
-        action.setRegularMarketPrice(Double.parseDouble(historicalDataList.get(6)));
-        action.setRegularMarketDayHigh(Double.parseDouble(historicalDataList.get(4)));
+        long segundos = (historicalDataList.get(2) != "0.0" ? Long.parseLong(historicalDataList.get(2)) : 0);
+        // long segundos = Long.parseLong(historicalDataList.get(2));
+        
+        if (segundos != 0) {
+            Date data = new Date(segundos * 1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            action.setRegularMarketTime(sdf.format(data));
+        }
+        else {
+            action.setRegularMarketTime(null);
+        }
+        
+
+        action.setRegularMarketPrice(historicalDataList.get(6) != "0.0" ? Double.parseDouble(historicalDataList.get(6)) : null);
+        // action.setRegularMarketPrice(Double.parseDouble(historicalDataList.get(6)));
+        action.setRegularMarketDayHigh(historicalDataList.get(4) != "0.0" ? Double.parseDouble(historicalDataList.get(4)) : null);
+        // action.setRegularMarketDayHigh(Double.parseDouble(historicalDataList.get(4)));
 
         action.setRegularMarketDayRange(null);
 
-        action.setRegularMarketDayLow(Double.parseDouble(historicalDataList.get(5)));
-        action.setRegularMarketVolume(Double.parseDouble(historicalDataList.get(7)));
+        action.setRegularMarketDayLow(historicalDataList.get(5) != "0.0" ? Double.parseDouble(historicalDataList.get(5)) : null);
+        // action.setRegularMarketDayLow(Double.parseDouble(historicalDataList.get(5)));
+        action.setRegularMarketVolume(historicalDataList.get(7) != "0.0" ? Double.parseDouble(historicalDataList.get(7)) : null);
+        // action.setRegularMarketVolume(Double.parseDouble(historicalDataList.get(7)));
 
         action.setRegularMarketPreviousClose(null);
 
 
-        action.setRegularMarketOpen(Double.parseDouble(historicalDataList.get(3)));
+        action.setRegularMarketOpen(historicalDataList.get(3) != "0.0" ? Double.parseDouble(historicalDataList.get(3)) : null);
+        // action.setRegularMarketOpen(Double.parseDouble(historicalDataList.get(3)));
 
 
         action.setAverageDailyVolume3Month(null);
@@ -173,7 +256,8 @@ public class ActionService {
         action.setFiftyTwoWeekLow(null);
         action.setFiftyTwoWeekHigh(null);
 
-        action.setSymbol(historicalDataList.get(1));
+        action.setSymbol(historicalDataList.get(1) != "0.0" ? historicalDataList.get(1) : null);
+        // action.setSymbol(historicalDataList.get(1));
 
         action = this.actionRepository.save(action);
         return action;

@@ -124,6 +124,14 @@ public class Action {
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<Portfolio> portfolios = new ArrayList<Portfolio>();
 
+    @OneToMany(mappedBy = "sellAction")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<HistoricoPortfolio> HistoricoPortfolioSell = new ArrayList<HistoricoPortfolio>();
+
+    @OneToMany(mappedBy = "buyAction")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<HistoricoPortfolio> HistoricoPortfolioBuy = new ArrayList<HistoricoPortfolio>();
+
 
     @AllArgsConstructor
     @NoArgsConstructor

@@ -12,4 +12,12 @@ public interface PortfolioProjection {
     public Action getAction();
 
     public String getSymbolAction();
+
+    public Double getNumberStockPurchased();
+
+    public Double getValueStock();
+
+    public Double getValuePurchased();
+
+    public String getUpdateLastStock();
 }

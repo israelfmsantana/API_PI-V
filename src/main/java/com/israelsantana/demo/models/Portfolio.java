@@ -39,5 +39,17 @@ public class Portfolio {
     @Column(name = "symbol", length = 100, nullable = true, unique = false)
     @Size(min = 2, max = 100)
     private String symbolAction;
+
+    @Column(name = "valueStock", nullable = true, unique = false)
+    private Double valueStock;
+
+    @Column(name = "valuePurchased", nullable = true, unique = false)
+    private Double valuePurchased;
+
+    @Column(name = "numberStockPurchased", nullable = true, unique = false)
+    private Double numberStockPurchased;
+
+    @Column(name = "updateLastReturn", nullable = true, unique = false)
+    private String updateLastStock;
     
 }

@@ -19,4 +19,19 @@ public class PortfolioUpdateDTO {
 
     @NotNull
     private Long actionId;
+
+    @NotNull
+    private String symbolAction;
+
+    @NotNull
+    private Double numberStockPurchased;
+
+    @NotNull
+    private Double valuePurchased;
+
+    @NotNull
+    private Double valueStock;
+
+    @NotNull
+    private String updateLastStock;
 }
