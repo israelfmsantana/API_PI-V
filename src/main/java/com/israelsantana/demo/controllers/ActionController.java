@@ -495,14 +495,8 @@ public class ActionController {
     }
 
 
-    // Authentication required
     @GetMapping("/calculator")
     public ResponseEntity<?> calculator() {
-
-        UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if (Objects.isNull(userSpringSecurity))
-            throw new AuthorizationException("Access denied!");
-
 
         List<String> tierList = volatility();
 
@@ -513,7 +507,7 @@ public class ActionController {
             actionChosen.add(tierList.get(i));
 
             Action action = actionService.findBySymbolStock(tierList.get(i));
-            User user = userService.findById(userSpringSecurity.getId());
+            User user = userService.findById(1L);
 
 
             LocalDate today = LocalDate.now();
@@ -533,7 +527,7 @@ public class ActionController {
             actionChosen.add(tierList.get(i));
 
             Action action = actionService.findBySymbolStock(tierList.get(i));
-            User user = userService.findById(userSpringSecurity.getId());
+            User user = userService.findById(1L);
 
 
             LocalDate today = LocalDate.now();
@@ -553,7 +547,7 @@ public class ActionController {
             actionChosen.add(tierList.get(i));
 
             Action action = actionService.findBySymbolStock(tierList.get(i));
-            User user = userService.findById(userSpringSecurity.getId());
+            User user = userService.findById(1L);
 
 
             LocalDate today = LocalDate.now();
@@ -584,324 +578,7 @@ public class ActionController {
 
     @GetMapping("/simulador")
     public ResponseEntity<?> simulador() {
-
-
-        int cont = 1;
-        // try {
-            
-        //     ResponseEntity<String> response = restTemplate.getForEntity("https://brapi.dev/api/quote/list?&token=6gVPmTbucyXJD7ki6adiZS", String.class);
         
-        //     ObjectMapper objectMapper = new ObjectMapper();
-        //     Action action = new Action();
-            
-        //     try {
-                
-        //         JsonNode jsonNode = objectMapper.readTree(response.getBody());
-                
-                
-        //         JsonNode stocksNode = jsonNode.get("stocks");
-
-                
-        //         List<String> stockCodes = new ArrayList<>();
-
-        //         Iterator<JsonNode> iterator = stocksNode.iterator();
-        //         JsonNode t = objectMapper.createObjectNode().put("chave1", "stock");
-        
-        //         while (iterator.hasNext()) {
-        //             JsonNode stockNode = iterator.next();
-        //             String stockCode = stockNode.get("stock").asText();
-        //             stockCodes.add(stockCode);
-        //         }
-
-                
-                
-            
-        //         String codInvalid = "MRSA6B";
-        //         for (String code : stockCodes) {
-        //             if (cont<=300 && !code.equals(codInvalid)) {
-        //                 ResponseEntity<String> response2 = restTemplate.getForEntity("https://brapi.dev/api/quote/" + code + "?token=6gVPmTbucyXJD7ki6adiZS", String.class);
-
-        //                 JsonNode jsonNode2 = objectMapper.readTree(response2.getBody());
-        //                 JsonNode stocksNode2 = jsonNode2.get("results");
-
-                        
-        //                 List<String> stockValues = new ArrayList<>();
-
-                    
-
-        //                 if (stocksNode2 != null && stocksNode2.isArray()) {
-        //                     for (JsonNode stockNode : stocksNode2) {
-
-        //                         JsonNode currencyNode = stockNode.get("currency");
-        //                         if (currencyNode != null && !currencyNode.isNull()) {
-        //                             String currency = currencyNode.asText();
-        //                             stockValues.add(currency);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode twoHundredDayAverageNode = stockNode.get("twoHundredDayAverage");
-        //                         if (twoHundredDayAverageNode != null && !twoHundredDayAverageNode.isNull()) {
-        //                             String twoHundredDayAverage = twoHundredDayAverageNode.asText();
-        //                             stockValues.add(twoHundredDayAverage);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode twoHundredDayAverageChangeNode = stockNode.get("twoHundredDayAverageChange");
-        //                         if (twoHundredDayAverageChangeNode != null && !twoHundredDayAverageChangeNode.isNull()) {
-        //                             String twoHundredDayAverageChange = twoHundredDayAverageChangeNode.asText();
-        //                             stockValues.add(twoHundredDayAverageChange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode twoHundredDayAverageChangePercentNode = stockNode.get("twoHundredDayAverageChangePercent");
-        //                         if (twoHundredDayAverageChangePercentNode != null && !twoHundredDayAverageChangePercentNode.isNull()) {
-        //                             String twoHundredDayAverageChangePercent = twoHundredDayAverageChangePercentNode.asText();
-        //                             stockValues.add(twoHundredDayAverageChangePercent);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode marketCapNode = stockNode.get("marketCap");
-        //                         if (marketCapNode != null && !marketCapNode.isNull()) {
-        //                             String marketCap = marketCapNode.asText();
-        //                             stockValues.add(marketCap);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode shortNameNode = stockNode.get("shortName");
-        //                         if (shortNameNode != null && !shortNameNode.isNull()) {
-        //                             String shortName = shortNameNode.asText();
-        //                             stockValues.add(shortName);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode longNameNode = stockNode.get("longName");
-        //                         if (longNameNode != null && !longNameNode.isNull()) {
-        //                             String longName = longNameNode.asText();
-        //                             stockValues.add(longName);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketChangeNode = stockNode.get("regularMarketChange");
-        //                         if (regularMarketChangeNode != null && !regularMarketChangeNode.isNull()) {
-        //                             String regularMarketChange = regularMarketChangeNode.asText();
-        //                             stockValues.add(regularMarketChange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketChangePercentNode = stockNode.get("regularMarketChangePercent");
-        //                         if (regularMarketChangePercentNode != null && !regularMarketChangePercentNode.isNull()) {
-        //                             String regularMarketChangePercent = regularMarketChangePercentNode.asText();
-        //                             stockValues.add(regularMarketChangePercent);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode regularMarketTimeNode = stockNode.get("regularMarketTime");
-        //                         if (regularMarketTimeNode != null && !regularMarketTimeNode.isNull()) {
-        //                             String regularMarketTime = regularMarketTimeNode.asText();
-        //                             stockValues.add(regularMarketTime);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketPriceNode = stockNode.get("regularMarketPrice");
-        //                         if (regularMarketPriceNode != null && !regularMarketPriceNode.isNull()) {
-        //                             String regularMarketPrice = regularMarketPriceNode.asText();
-        //                             stockValues.add(regularMarketPrice);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketDayHighNode = stockNode.get("regularMarketDayHigh");
-        //                         if (regularMarketDayHighNode != null && !regularMarketDayHighNode.isNull()) {
-        //                             String regularMarketDayHigh = regularMarketDayHighNode.asText();
-        //                             stockValues.add(regularMarketDayHigh);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-                                
-        //                         JsonNode regularMarketDayRangeNode = stockNode.get("regularMarketDayRange");
-        //                         if (regularMarketDayRangeNode != null && !regularMarketDayRangeNode.isNull()) {
-        //                             String regularMarketDayRange = regularMarketDayRangeNode.asText();
-        //                             stockValues.add(regularMarketDayRange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketDayLowNode = stockNode.get("regularMarketDayLow");
-        //                         if (regularMarketDayLowNode != null && !regularMarketDayLowNode.isNull()) {
-        //                             String regularMarketDayLow = regularMarketDayLowNode.asText();
-        //                             stockValues.add(regularMarketDayLow);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode regularMarketVolumeNode = stockNode.get("regularMarketVolume");
-        //                         if (regularMarketVolumeNode != null && !regularMarketVolumeNode.isNull()) {
-        //                             String regularMarketVolume = regularMarketVolumeNode.asText();
-        //                             stockValues.add(regularMarketVolume);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketPreviousCloseNode = stockNode.get("regularMarketPreviousClose");
-        //                         if (regularMarketPreviousCloseNode != null && !regularMarketPreviousCloseNode.isNull()) {
-        //                             String regularMarketPreviousClose = regularMarketPreviousCloseNode.asText();
-        //                             stockValues.add(regularMarketPreviousClose);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode regularMarketOpenNode = stockNode.get("regularMarketOpen");
-        //                         if (regularMarketOpenNode != null && !regularMarketOpenNode.isNull()) {
-        //                             String regularMarketOpen = regularMarketOpenNode.asText();
-        //                             stockValues.add(regularMarketOpen);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode averageDailyVolume3MonthNode = stockNode.get("averageDailyVolume3Month");
-        //                         if (averageDailyVolume3MonthNode != null && !averageDailyVolume3MonthNode.isNull()) {
-        //                             String averageDailyVolume3Month = averageDailyVolume3MonthNode.asText();
-        //                             stockValues.add(averageDailyVolume3Month);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode averageDailyVolume10DayNode = stockNode.get("averageDailyVolume10Day");
-        //                         if (averageDailyVolume10DayNode != null && !averageDailyVolume10DayNode.isNull()) {
-        //                             String averageDailyVolume10Day = averageDailyVolume10DayNode.asText();
-        //                             stockValues.add(averageDailyVolume10Day);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode fiftyTwoWeekLowChangeNode = stockNode.get("fiftyTwoWeekLowChange");
-        //                         if (fiftyTwoWeekLowChangeNode != null && !fiftyTwoWeekLowChangeNode.isNull()) {
-        //                             String fiftyTwoWeekLowChange = fiftyTwoWeekLowChangeNode.asText();
-        //                             stockValues.add(fiftyTwoWeekLowChange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode fiftyTwoWeekRangeNode = stockNode.get("fiftyTwoWeekRange");
-        //                         if (fiftyTwoWeekRangeNode != null && !fiftyTwoWeekRangeNode.isNull()) {
-        //                             String fiftyTwoWeekRange = fiftyTwoWeekRangeNode.asText();
-        //                             stockValues.add(fiftyTwoWeekRange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode fiftyTwoWeekHighChangeNode = stockNode.get("fiftyTwoWeekHighChange");
-        //                         if (fiftyTwoWeekHighChangeNode != null && !fiftyTwoWeekHighChangeNode.isNull()) {
-        //                             String fiftyTwoWeekHighChange = fiftyTwoWeekHighChangeNode.asText();
-        //                             stockValues.add(fiftyTwoWeekHighChange);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         JsonNode fiftyTwoWeekHighChangePercentNode = stockNode.get("fiftyTwoWeekHighChangePercent");
-        //                         if (fiftyTwoWeekHighChangePercentNode != null && !fiftyTwoWeekHighChangePercentNode.isNull()) {
-        //                             String fiftyTwoWeekHighChangePercent = fiftyTwoWeekHighChangePercentNode.asText();
-        //                             stockValues.add(fiftyTwoWeekHighChangePercent);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode fiftyTwoWeekLowNode = stockNode.get("fiftyTwoWeekLow");
-        //                         if (fiftyTwoWeekLowNode != null && !fiftyTwoWeekLowNode.isNull()) {
-        //                             String fiftyTwoWeekLow = fiftyTwoWeekLowNode.asText();
-        //                             stockValues.add(fiftyTwoWeekLow);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode fiftyTwoWeekHighNode = stockNode.get("fiftyTwoWeekHigh");
-        //                         if (fiftyTwoWeekHighNode != null && !fiftyTwoWeekHighNode.isNull()) {
-        //                             String fiftyTwoWeekHigh = fiftyTwoWeekHighNode.asText();
-        //                             stockValues.add(fiftyTwoWeekHigh);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-
-        //                         JsonNode symbolNode = stockNode.get("symbol");
-        //                         if (symbolNode != null && !symbolNode.isNull()) {
-        //                             String symbol = symbolNode.asText();
-        //                             stockValues.add(symbol);
-        //                         } else {
-        //                             stockValues.add("0.0");
-        //                         }
-                                
-
-        //                         action = this.actionService.CreateStock(stockValues);
-        //                     }
-
-        //                 }
-
-        //             }
-        //             cont += 1;
-        //         }
-
-                
-        //     } catch (Exception e) {
-        //         e.printStackTrace();
-        //         return ResponseEntity.status(500).body("Erro na logica da API Barpi - " + cont);
-        //     }
-
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     return ResponseEntity.status(500).body("Erro na API");
-        // }
 
 
 

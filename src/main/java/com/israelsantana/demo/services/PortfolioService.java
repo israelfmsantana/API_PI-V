@@ -122,10 +122,6 @@ public class PortfolioService {
         }
     }
 
-    private Boolean userHasAction(UserSpringSecurity userSpringSecurity, Portfolio portfolio) {
-        return portfolio.getUser().getId().equals(userSpringSecurity.getId());
-    }
-
 
     public Portfolio fromDTO(@Valid PortfolioCreateDTO obj) {
         Portfolio portfolio = new Portfolio();

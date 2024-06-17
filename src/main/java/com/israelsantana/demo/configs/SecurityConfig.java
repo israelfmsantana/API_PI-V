@@ -52,6 +52,7 @@ public class SecurityConfig {
                 "/actions","/actions/**",
                 "/portfolio","/portfolio/**",
                 "/historicoPortfolio","/historicoPortfolio/**",
+                "/calculator","/calculator/**",
 
         };
 
