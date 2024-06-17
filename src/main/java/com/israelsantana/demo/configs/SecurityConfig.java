@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,11 +40,20 @@ public class SecurityConfig {
         private JWTUtil jwtUtil;
 
         private static final String[] PUBLIC_MATCHERS = {
-                        "/"
+                        "/",
         };
+
         private static final String[] PUBLIC_MATCHERS_POST = {
                         "/user",
-                        "/login"
+                        "/login",
+        };
+
+        private static final String[] PUBLIC_MATCHERS_GET = {
+                "/actions","/actions/**",
+                "/portfolio","/portfolio/**",
+                "/historicoPortfolio","/historicoPortfolio/**",
+                "/calculator","/calculator/**",
+
         };
 
         @Bean
@@ -59,6 +69,7 @@ public class SecurityConfig {
 
             http.authorizeRequests(requests -> requests
                     .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                    .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
                     .antMatchers(PUBLIC_MATCHERS).permitAll()
                     .anyRequest().authenticated())
                     .authenticationManager(authenticationManager);
@@ -84,6 +95,11 @@ public class SecurityConfig {
         @Bean
         public BCryptPasswordEncoder bCryptPasswordEncoder() {
                 return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        public RestTemplate restTemplate() {
+                return new RestTemplate();
         }
 
 }

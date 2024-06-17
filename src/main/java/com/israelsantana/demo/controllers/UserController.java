@@ -1,6 +1,7 @@
 package com.israelsantana.demo.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -30,12 +31,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // Authentication required
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User obj = this.userService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
+    // Authentication required
+    @GetMapping("/login")
+    public ResponseEntity<User> findByUser_login() {
+        User objs = this.userService.findByUser_login();
+        return ResponseEntity.ok().body(objs);
+    }
+
+    // Authentication required
+    @GetMapping("/ids/{ids}")
+    public ResponseEntity<List<User>> findAllByIds(@PathVariable List<Long> ids) {
+        List<User> users = this.userService.findAllByIds(ids);
+        return ResponseEntity.ok().body(users);
+    }
+
+    // Authentication required
+    @GetMapping()
+    public ResponseEntity<List<User>> findAll() {
+        List<User> users = this.userService.findAll();
+        return ResponseEntity.ok().body(users);
+    }
+    
+    // No need to authentication
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj) {
         User user = this.userService.fromDTO(obj);
@@ -45,6 +69,7 @@ public class UserController {
         return ResponseEntity.created(uri).build();
     }
 
+    // Authentication required
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@Valid @RequestBody UserUpdateDTO obj, @PathVariable Long id) {
         obj.setId(id);
@@ -53,6 +78,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // Authentication required
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.userService.delete(id);

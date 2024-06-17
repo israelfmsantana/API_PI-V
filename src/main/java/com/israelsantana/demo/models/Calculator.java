@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -16,12 +15,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = Task.TABLE_NAME)
+@Table(name = Calculator.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Task {
-    public static final String TABLE_NAME = "task";
+public class Calculator {
+
+    public static final String TABLE_NAME = "calculator";
 
     @Id
     @Column(name = "id", unique = true)
@@ -32,9 +32,18 @@ public class Task {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Column(name = "description", length = 255, nullable = false)
-    @Size(min = 1, max = 255)
-    @NotBlank
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "action_id", nullable = false, updatable = false)
+    private Action action;
 
+    @Column(name = "symbol", length = 100, nullable = true, unique = false)
+    @Size(min = 2, max = 100)
+    private String symbolAction;
+
+    @Column(name = "valueStock", nullable = true, unique = false)
+    private Double valueStock;
+
+    @Column(name = "date", nullable = true, unique = false)
+    private String date;
+    
 }
