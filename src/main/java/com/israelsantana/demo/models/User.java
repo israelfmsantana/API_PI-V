@@ -52,6 +52,17 @@ public class User {
     @NotBlank
     private String password;
 
+<<<<<<< HEAD
+=======
+    @OneToMany(mappedBy = "user")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<Portfolio> portfolios = new ArrayList<Portfolio>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private List<Calculator> calculators = new ArrayList<Calculator>();
+
+>>>>>>> c595f6557fb785bfb03855f857697dcc1f14a9b2
     @Column(name = "profile", nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile")

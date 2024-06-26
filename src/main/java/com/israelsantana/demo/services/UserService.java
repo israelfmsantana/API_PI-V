@@ -33,12 +33,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+<<<<<<< HEAD
     // Authentication required
     public User findById(Long id) {
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if (Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Access denied!");
+=======
+>>>>>>> c595f6557fb785bfb03855f857697dcc1f14a9b2
 
+    public User findById(Long id) {
+       
         Optional<User> user = this.userRepository.findById(id);
         return user.orElseThrow(() -> new ObjectNotFoundException(
                 "User not found! Id: " + id + ", Type: " + User.class.getName()));
