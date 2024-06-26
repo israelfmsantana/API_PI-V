@@ -18,58 +18,58 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.israelsantana.demo.models.Task;
-import com.israelsantana.demo.models.projection.TaskProjection;
-import com.israelsantana.demo.services.TaskService;
+import com.israelsantana.demo.models.Project;
+import com.israelsantana.demo.models.dto.ProjectCreateDTO;
+import com.israelsantana.demo.models.dto.ProjectUpdateDTO;
+import com.israelsantana.demo.services.ProjectService;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/project")
 @Validated
-public class TaskController {
+public class ProjectController {
 
     @Autowired
-    private TaskService taskService;
+    private ProjectService projectService;
+
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findById(@PathVariable Long id) {
-        Task obj = this.taskService.findById(id);
-        return ResponseEntity.ok(obj);
+    public ResponseEntity<Project> findById(@PathVariable Long id) {
+        Project project = this.projectService.findById(id);
+        return ResponseEntity.ok(project);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<List<TaskProjection>> findAllByUser() {
-        List<TaskProjection> objs = this.taskService.findAllByUser();
-        return ResponseEntity.ok().body(objs);
-    }
 
-    @GetMapping("/user_admin")
-    public ResponseEntity<List<Task>> findAll() {
-        List<Task> objs = this.taskService.findAll();
-        return ResponseEntity.ok().body(objs);
+    @GetMapping()
+    public ResponseEntity<List<Project>> findAll() {
+        List<Project> projects = this.projectService.findAll();
+        return ResponseEntity.ok().body(projects);
     }
-
 
 
     @PostMapping
     @Validated
-    public ResponseEntity<Void> create(@Valid @RequestBody Task obj) {
-        this.taskService.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody ProjectCreateDTO obj) {
+        Project project = this.projectService.fromDTO(obj);
+        Project newProject = this.projectService.create(project);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(obj.getId()).toUri();
+                .path("/{id}").buildAndExpand(newProject).toUri();
         return ResponseEntity.created(uri).build();
     }
 
+    // Authentication required ADMIN
     @PutMapping("/{id}")
     @Validated
-    public ResponseEntity<Void> update(@Valid @RequestBody Task obj, @PathVariable Long id) {
+    public ResponseEntity<Void> update(@Valid @RequestBody ProjectUpdateDTO obj, @PathVariable Long id) {
         obj.setId(id);
-        this.taskService.update(obj);
+        Project project = this.projectService.fromDTO(obj);
+        this.projectService.update(project);
         return ResponseEntity.noContent().build();
     }
 
+    // Authentication required ADMIN
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        this.taskService.delete(id);
+        this.projectService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -52,14 +52,9 @@ public class User {
     @NotBlank
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Task> tasks = new ArrayList<Task>();
-
     @Column(name = "profile", nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Integer> profiles = new HashSet<>();
 
     public Set<ProfileEnum> getProfiles() {

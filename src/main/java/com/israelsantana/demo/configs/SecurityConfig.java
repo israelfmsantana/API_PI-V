@@ -39,11 +39,21 @@ public class SecurityConfig {
         private JWTUtil jwtUtil;
 
         private static final String[] PUBLIC_MATCHERS = {
-                        "/"
+                        "/",
         };
+
         private static final String[] PUBLIC_MATCHERS_POST = {
                         "/user",
                         "/login"
+        };
+
+        private static final String[] PUBLIC_MATCHERS_GET = {
+                "/aboutMe","/aboutMe/**",
+
+                "/project","/project/**",
+
+
+
         };
 
         @Bean
@@ -59,6 +69,7 @@ public class SecurityConfig {
 
             http.authorizeRequests(requests -> requests
                     .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                    .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
                     .antMatchers(PUBLIC_MATCHERS).permitAll()
                     .anyRequest().authenticated())
                     .authenticationManager(authenticationManager);
